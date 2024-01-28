@@ -1,0 +1,25 @@
+from pathlib import Path
+import torch
+import numpy as np
+from pathlib import Path
+from dataset.datasets import ImageDirsDataset
+from torch.utils.data import Dataset, DataLoader
+from config import get_config
+
+config = get_config(Path("conf/base_config.yaml"))
+
+train_dataset = ImageDirsDataset(images_dir=config.dataset.train_path,
+								preprocessing_config=config.dataset.train_preprocessing_config)
+
+val_dataset = ImageDirsDataset(images_dir=config.dataset.val_path,
+								preprocessing_config=config.dataset.val_preprocessing_config)
+
+loader_args = dict(
+    batch_size=config.dataset.batch_size,
+    num_workers=config.dataset.loader_num_workers,
+    pin_memory=True
+)
+
+train_loader = DataLoader(train_dataset, shuffle=True, **loader_args)
+val_loader = DataLoader(val_dataset, **loader_args)
+

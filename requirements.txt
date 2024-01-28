@@ -1,0 +1,9 @@
+PyYAML
+pathlib
+pydantic
+albumentations
+numpy
+matplotlib
+opencv-python
+tqdm
+torch
