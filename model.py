@@ -1,0 +1,64 @@
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from torchvision import models
+
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
+class ConvBlock(nn.Module):
+    def __init__(self, chin, chout, kernel_size=3):
+        super().__init__()
+        self.seq = nn.Sequential(
+            nn.Conv2d(in_channels=chin, out_channels=chout, kernel_size=kernel_size, padding=kernel_size//2, bias=False),
+            nn.BatchNorm2d(chout),
+            nn.ReLU()
+        )
+        self.mp = nn.MaxPool2d(kernel_size=2)
+
+    def forward(self, x):
+        res = self.seq(x)
+        res = self.mp(res)
+        return res
+
+class CNN(nn.Module):
+  def __init__(self):
+    super().__init__()
+    # input: 224x224
+    self.conv_block1 = ConvBlock(3, 32)
+    self.conv_block2 = ConvBlock(32, 64)
+    self.conv_block3 = ConvBlock(64, 128)
+    self.conv_block4 = ConvBlock(128, 256)
+    self.conv_block5 = ConvBlock(256, 256)
+
+    self.flatten = nn.Flatten()
+    self.fc1 = nn.Linear(12544, 2)
+    
+
+  def forward(self, x):
+    #print(x.shape)
+    x = self.conv_block1(x)
+    #print(x.shape)
+    x = self.conv_block2(x)
+    #print(x.shape)
+    x = self.conv_block3(x)
+    #print(x.shape)
+    x = self.conv_block4(x)
+    #print(x.shape)
+    x = self.conv_block5(x)
+    #print(x.shape)
+    
+    x = self.flatten(x)
+    #print(x.shape)
+    x = self.fc1(x)
+    return x
+  
+
+base_cnn_model = CNN().to(device)
+
+transfer_model = models.densenet201(pretrained=True)
+transfer_model.classifier = nn.Linear(in_features=1920, out_features=2, bias=True)
+
+for p in transfer_model.features.parameters():
+    p.requires_grad = False
+
+transfer_model = transfer_model.to(device)
