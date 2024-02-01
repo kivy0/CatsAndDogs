@@ -22,7 +22,8 @@ def evaluate(model, eval_loader, loss_fn, device):
             y_pred = model(x_batch)
             _, predicted = torch.max(y_pred.data, 1)
 
-            loss = loss_fn(y_pred.to(device), y_batch)
+            loss = loss_fn(y_pred.to(device), y_batch.float())
+
             r_loss += loss.item()
 
             preds.extend(predicted.cpu().numpy())
@@ -52,10 +53,9 @@ def train_model(model, optimizer, loss_fn, train_loader, val_loader, device, num
 
             optimizer.zero_grad()
 
-            y_pred = model(x_batch)
-            _, predicted = torch.max(y_pred.data, 1)
-            loss = loss_fn(y_pred.to(device), y_batch)
-
+            y_pred = model(x_batch).squeeze()
+            predicted = (y_pred > 0.5).float()
+            loss = loss_fn(y_pred.float().to(device), y_batch.float())
             
             print('\r Train Epoch: {}/{} [{}/{} ({:.0f}%)]\tTrain Loss: {:.6f}'.format(
                             ep+1,

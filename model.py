@@ -31,7 +31,7 @@ class CNN(nn.Module):
     self.conv_block5 = ConvBlock(256, 256)
 
     self.flatten = nn.Flatten()
-    self.fc1 = nn.Linear(12544, 2)
+    self.fc1 = nn.Linear(12544, 1)
     
 
   def forward(self, x):
@@ -49,14 +49,17 @@ class CNN(nn.Module):
     
     x = self.flatten(x)
     #print(x.shape)
-    x = self.fc1(x)
+    x = nn.Sigmoid(self.fc1(x))
     return x
   
 
 base_cnn_model = CNN().to(device)
 
 transfer_model = models.densenet201(pretrained=True)
-transfer_model.classifier = nn.Linear(in_features=1920, out_features=2, bias=True)
+transfer_model.classifier = nn.Sequential(
+    nn.Linear(in_features=1920, out_features=1, bias=True),
+    nn.Sigmoid()
+)
 
 for p in transfer_model.features.parameters():
     p.requires_grad = False

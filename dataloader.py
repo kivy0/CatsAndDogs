@@ -13,7 +13,8 @@ train_dataset = ImageDirsDataset(images_dir=config.dataset.train_path,
 
 val_dataset = ImageDirsDataset(images_dir=config.dataset.val_path,
 								preprocessing_config=config.dataset.val_preprocessing_config)
-
+test_dataset = ImageDirsDataset(images_dir=config.dataset.test_path,
+								preprocessing_config=config.dataset.val_preprocessing_config)
 loader_args = dict(
     batch_size=config.dataset.batch_size,
     num_workers=config.dataset.loader_num_workers,
@@ -21,5 +22,5 @@ loader_args = dict(
 )
 
 train_loader = DataLoader(train_dataset, shuffle=True, **loader_args)
-val_loader = DataLoader(val_dataset, **loader_args)
-
+val_loader = DataLoader(val_dataset, shuffle=True, **loader_args)
+test_loader = DataLoader(test_dataset, **loader_args)
