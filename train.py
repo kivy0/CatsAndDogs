@@ -19,7 +19,7 @@ def evaluate(model, eval_loader, loss_fn, device):
         y_batch = batch['label'].to(device)
 
         with torch.inference_mode():
-            y_pred = model(x_batch)
+            y_pred = model(x_batch).squeeze()
             _, predicted = torch.max(y_pred.data, 1)
 
             loss = loss_fn(y_pred.to(device), y_batch.float())

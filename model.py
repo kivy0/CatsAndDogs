@@ -49,7 +49,7 @@ class CNN(nn.Module):
     
     x = self.flatten(x)
     #print(x.shape)
-    x = nn.Sigmoid(self.fc1(x))
+    x = torch.sigmoid(self.fc1(x))
     return x
   
 
