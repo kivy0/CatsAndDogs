@@ -30,7 +30,7 @@ def evaluate(model, eval_loader, loss_fn, device):
             preds.extend(predicted.cpu().numpy())
             ans.extend(y_batch.cpu().numpy())
         
-        f1_metric = f1_score(ans, preds, average='micro')
+        f1_metric = f1_score(ans, preds, average='binary')
 
     return f1_metric, r_loss / len(eval_loader)
     
@@ -88,7 +88,7 @@ def train_model(model, optimizer, loss_fn, train_loader, val_loader, device, con
 
         train_f1 = f1_score(ans_train, preds_train, average='micro')
         train_loss = running_loss / len(train_loader)
-        print(f'\navg train loss:{train_loss:.3f}, f1_micro on train:{train_f1:.3f}')
+        print(f'\navg train loss:{train_loss:.3f}, f1 on train:{train_f1:.3f}')
         train_loss_history.append(train_loss)
         train_f1_history.append(train_f1)
 
@@ -97,7 +97,7 @@ def train_model(model, optimizer, loss_fn, train_loader, val_loader, device, con
 
 
         val_f1, val_loss = evaluate(model, val_loader, loss_fn, device)
-        print(f'avg val loss:{val_loss:.3f}, f1_micro on validation:{val_f1:.3f}\n')
+        print(f'avg val loss:{val_loss:.3f}, f1 on validation:{val_f1:.3f}\n')
         val_loss_history.append(val_loss)
         val_f1_history.append(val_f1)
 
