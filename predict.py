@@ -35,13 +35,13 @@ def predict_img_class(model, images: List[Path], device='cpu') -> torch.Tensor:
   with torch.no_grad():
       output = model(data).squeeze()
       predicted = (output > 0.5).float()
-  return predicted
+  return predicted if predicted.size() else predicted.unsqueeze(0)
 
 def show_predicted(images: List[Path],
                    predicted: torch.Tensor):
   for i, img in enumerate(images):
      preprocess(load_sample(img), preprocessing)
-     print(f"Predicted class for photo {i+1}: {'cat' if predicted[i] else 'dog'}")
+     print(f"Predicted class for photo {i+1}: {predicted[i]} - {'cat' if predicted[i] else 'dog'}")
 
 
 def make_submission_csv(img_names: List[Path],
