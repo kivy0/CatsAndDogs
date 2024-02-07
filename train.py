@@ -32,6 +32,7 @@ def evaluate(model, eval_loader, loss_fn, device):
         
         f1_metric = f1_score(ans, preds, average='binary')
 
+
     return f1_metric, r_loss / len(eval_loader)
     
 

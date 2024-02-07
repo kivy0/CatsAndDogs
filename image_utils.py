@@ -12,7 +12,7 @@ def preprocess(
         image: np.ndarray,
         transform: A.Compose,
 		# 0-False, 1-draw augment too, 2- draw for predict
-        draw_mode: int = 1
+        draw_mode: int = 0
 ) -> np.ndarray:
 	augmented = transform(image=image)["image"]
 	if draw_mode == 1:

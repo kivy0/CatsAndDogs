@@ -2,6 +2,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torchvision import models
+from efficientnet_pytorch import EfficientNet
+
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -61,7 +63,20 @@ transfer_model.classifier = nn.Sequential(
     nn.Sigmoid()
 )
 
+resnet = models.resnet50(pretrained=True)
+resnet.fc = nn.Sequential(
+    nn.Linear(in_features=2048, out_features=1, bias=True),
+    nn.Sigmoid()
+)
+resnet = resnet.to(device)
+
 for p in transfer_model.features.parameters():
     p.requires_grad = False
 
 transfer_model = transfer_model.to(device)
+
+eff_model = EfficientNet.from_pretrained('efficientnet-b5')
+eff_model._fc = nn.Sequential(
+   nn.Linear(in_features=2048, out_features=1, bias=True),
+   nn.Sigmoid())
+eff_model = eff_model.to(device)
