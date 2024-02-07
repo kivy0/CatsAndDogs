@@ -2,7 +2,7 @@ from pathlib import Path
 import torch
 import numpy as np
 from pathlib import Path
-from dataset.datasets import ImageDirsDataset
+from datasets import ImageDirsDataset
 from torch.utils.data import Dataset, DataLoader
 from config import get_config
 
