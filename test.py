@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 
 
 def test_model(model, test_loader, device):
+    model = model.eval()
     y_true = np.array([])
     y_pred = np.array([])
     with torch.inference_mode():
