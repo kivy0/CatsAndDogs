@@ -86,7 +86,7 @@ def train_model(model, optimizer, loss_fn, train_loader, val_loader, device, con
             preds_train.extend(predicted.cpu().numpy())
             ans_train.extend(y_batch.cpu().numpy())
 
-        train_f1 = f1_score(ans_train, preds_train, average='micro')
+        train_f1 = f1_score(ans_train, preds_train, average='binary')
         train_loss = running_loss / len(train_loader)
         print(f'\navg train loss:{train_loss:.3f}, f1 on train:{train_f1:.3f}')
         train_loss_history.append(train_loss)
